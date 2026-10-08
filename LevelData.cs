@@ -5,8 +5,8 @@
         private readonly List<LevelElement> elements = [];
         public IEnumerable<LevelElement> Elements => elements;
 
-        int PlayerStartXPosition { get; set; }
-        int PlayerStartYPositiion { get; set; }
+        public int PlayerStartXPosition { get; set; }
+        public int PlayerStartYPositiion { get; set; }
 
         public void LoadLevel(string filename)
         {
@@ -29,7 +29,6 @@
                             elements.Add(new Wall(x, y));
                             break;
                         case '@':
-                            elements.Add(new Player(x, y));
                             PlayerStartXPosition = x;
                             PlayerStartYPositiion = y;
                             break;
