@@ -22,5 +22,11 @@
             Console.Write(entityChar);
             Console.ResetColor();
         }
+
+        public static void ClearPreviousPosition(int prevX, int prevY)
+        {
+            Console.SetCursorPosition(prevX, prevY);
+            Console.Write(" ");
+        }
     }
 }
