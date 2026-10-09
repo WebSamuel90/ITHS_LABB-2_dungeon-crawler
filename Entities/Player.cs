@@ -1,56 +1,40 @@
-﻿namespace ITHS_LABB_2_dungeon_crawler
+﻿using ITHS_LABB_2_dungeon_crawler.Interfaces;
+using ITHS_LABB_2_dungeon_crawler.Models;
+
+namespace ITHS_LABB_2_dungeon_crawler
 {
-    public class Player : LevelElement
+    public class Player : LevelElement, IMovable
     {
         public string Name { get; } = "Player";
         public int HP { get; set; } = 100;
-        public Player(int x, int y) : base(x, y, '@', ConsoleColor.Blue)
+        public Player(Position Position) : base(Position, '@', ConsoleColor.Blue)
         {
         }
 
-        public void TryMove(IEnumerable<LevelElement> levelElements)
+        public Position TakeInput()
         {
-            Console.CursorVisible = false;
-            ConsoleKeyInfo KeyInfo = Console.ReadKey();
-            int newX = xPosition;
-            int newY = yPosition;
+            ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
+            Position newPosition = new(Position.X, Position.Y);
 
             switch (KeyInfo.Key)
             {
                 case ConsoleKey.UpArrow:
-                    newY--;
+                    newPosition.Y--;
                     break;
                 case ConsoleKey.DownArrow:
-                    newY++;
+                    newPosition.Y++;
                     break;
                 case ConsoleKey.LeftArrow:
-                    newX--;
+                    newPosition.X--;
                     break;
                 case ConsoleKey.RightArrow:
-                    newX++;
+                    newPosition.X++;
                     break;
                 default:
                     break;
             }
 
-            var elementAtNewPosition = levelElements
-                .Where(e => e.xPosition == newX && e.yPosition == newY)
-                .FirstOrDefault();
-
-            switch (elementAtNewPosition)
-            {
-                case Wall:
-                    break;
-                case Enemy:
-                    // Todo: Attack enemy.
-                    break;
-                default:
-                    ClearPreviousPosition(xPosition, yPosition);
-                    xPosition = newX;
-                    yPosition = newY;
-                    this.Draw();
-                    break;
-            }
+            return newPosition;
         }
     }
 }
