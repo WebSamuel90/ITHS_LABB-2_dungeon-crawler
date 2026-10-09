@@ -1,32 +1,26 @@
-﻿namespace ITHS_LABB_2_dungeon_crawler
+﻿using ITHS_LABB_2_dungeon_crawler.Models;
+
+namespace ITHS_LABB_2_dungeon_crawler
 {
     public abstract class LevelElement
     {
-        public int xPosition { get; set; }
-        public int yPosition { get; set; }
-        public char entityChar { get; set; }
-        public ConsoleColor entityColor { get; set; }
+        public char Icon { get; protected set; }
+        public ConsoleColor Color { get; protected set; }
+        public Position Position { get; set; }
 
-        public LevelElement(int x, int y, char entityChar, ConsoleColor entityColor)
+        protected LevelElement(Position position, char icon, ConsoleColor color)
         {
-            this.xPosition = x;
-            this.yPosition = y;
-            this.entityChar = entityChar;
-            this.entityColor = entityColor;
+            this.Position = position;
+            this.Icon = icon;
+            this.Color = color;
         }
 
         public void Draw()
         {
-            Console.SetCursorPosition(xPosition, yPosition);
-            Console.ForegroundColor = entityColor;
-            Console.Write(entityChar);
+            Console.SetCursorPosition(Position.X, Position.Y);
+            Console.ForegroundColor = Color;
+            Console.Write(Icon);
             Console.ResetColor();
-        }
-
-        public static void ClearPreviousPosition(int prevX, int prevY)
-        {
-            Console.SetCursorPosition(prevX, prevY);
-            Console.Write(" ");
         }
     }
 }

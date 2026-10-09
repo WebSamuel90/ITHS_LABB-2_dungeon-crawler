@@ -9,20 +9,22 @@
                 Path.Combine(AppContext.BaseDirectory, "Assets", "Level1.txt")
             );
 
-            var player = new Player(levelOne.PlayerStartXPosition, levelOne.PlayerStartYPositiion);
-
-            foreach (var element in levelOne.Elements)
-            {
-                element.Draw();
-            }
-            player.Draw();
+            var player = new Player(levelOne.PlayerStartPosition);
 
             bool playGame = true;
 
+            Console.CursorVisible = false;
 
             while (playGame)
             {
-                player.TryMove(levelOne.Elements);
+                player.Draw();
+                foreach (var element in levelOne.Elements)
+                {
+                    element.Draw();
+                }
+
+                var desiredPosition = player.TakeInput();
+                levelOne.TryMove(player, desiredPosition);
             }
 
 

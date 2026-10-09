@@ -1,8 +1,10 @@
-﻿namespace ITHS_LABB_2_dungeon_crawler
+﻿using ITHS_LABB_2_dungeon_crawler.Models;
+
+namespace ITHS_LABB_2_dungeon_crawler
 {
     public class Snake : Enemy
     {
-        public Snake(int x, int y) : base(x, y, 's', ConsoleColor.DarkRed, "Snake", 25)
+        public Snake(Position Position) : base(Position, 's', ConsoleColor.DarkRed, "Snake", 25)
         {
         }
 

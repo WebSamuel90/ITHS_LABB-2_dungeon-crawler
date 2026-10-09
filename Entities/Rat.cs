@@ -1,8 +1,10 @@
-﻿namespace ITHS_LABB_2_dungeon_crawler
+﻿using ITHS_LABB_2_dungeon_crawler.Models;
+
+namespace ITHS_LABB_2_dungeon_crawler
 {
     public class Rat : Enemy
     {
-        public Rat(int x, int y) : base(x, y, 'r', ConsoleColor.DarkYellow, "Rat", 10)
+        public Rat(Position Position) : base(Position, 'r', ConsoleColor.DarkYellow, "Rat", 10)
         {
         }
 
