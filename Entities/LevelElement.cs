@@ -1,26 +1,26 @@
 ﻿using ITHS_LABB_2_dungeon_crawler.Models;
 
-namespace ITHS_LABB_2_dungeon_crawler
+namespace ITHS_LABB_2_dungeon_crawler.Entities
 {
-    public abstract class LevelElement
+    public abstract class LevelElement(Position position, char icon, ConsoleColor color)
     {
-        public char Icon { get; protected set; }
-        public ConsoleColor Color { get; protected set; }
-        public Position Position { get; set; }
+        public char Icon { get; protected set; } = icon;
+        public ConsoleColor Color { get; protected set; } = color;
+        public Position Position { get; set; } = position;
 
-        protected LevelElement(Position position, char icon, ConsoleColor color)
-        {
-            this.Position = position;
-            this.Icon = icon;
-            this.Color = color;
-        }
+        public const int levelYOffset = 8;
 
         public void Draw()
         {
-            Console.SetCursorPosition(Position.X, Position.Y);
+            Console.SetCursorPosition(Position.X, Position.Y + levelYOffset);
             Console.ForegroundColor = Color;
             Console.Write(Icon);
             Console.ResetColor();
+        }
+
+        public static double GetDistanceBetween(Position entityOne, Position entityTwo)
+        {
+            return Math.Sqrt(Math.Pow(entityOne.Y - entityTwo.Y, 2) + Math.Pow(entityOne.X - entityTwo.X, 2));
         }
     }
 }

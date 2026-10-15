@@ -1,17 +1,22 @@
 ﻿using ITHS_LABB_2_dungeon_crawler.Interfaces;
 using ITHS_LABB_2_dungeon_crawler.Models;
 
-namespace ITHS_LABB_2_dungeon_crawler
+namespace ITHS_LABB_2_dungeon_crawler.Entities
 {
-    public class Player : LevelElement, IMovable
+    public class Player(Position Position) : LevelElement(Position, '@', ConsoleColor.Blue), IMovable, IFightable
     {
         public string Name { get; } = "Player";
         public int HP { get; set; } = 100;
-        public Player(Position Position) : base(Position, '@', ConsoleColor.Blue)
+        public Dice AttackDice { get; } = new Dice(2, 6, 2);
+        public Dice DefenceDice { get; } = new Dice(2, 6, 0);
+        public int EnemiesSlain { get; private set; } = 0;
+
+        public void IncreaseEnemiesSlain()
         {
+            EnemiesSlain++;
         }
 
-        public Position TakeInput()
+        public Position? TakeInput()
         {
             ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
             Position newPosition = new(Position.X, Position.Y);
@@ -31,7 +36,7 @@ namespace ITHS_LABB_2_dungeon_crawler
                     newPosition.X++;
                     break;
                 default:
-                    break;
+                    return null;
             }
 
             return newPosition;

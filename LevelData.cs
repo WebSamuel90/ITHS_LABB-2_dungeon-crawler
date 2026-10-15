@@ -1,4 +1,6 @@
-﻿using ITHS_LABB_2_dungeon_crawler.Interfaces;
+﻿using ITHS_LABB_2_dungeon_crawler.Entities;
+using ITHS_LABB_2_dungeon_crawler.Game;
+using ITHS_LABB_2_dungeon_crawler.Interfaces;
 using ITHS_LABB_2_dungeon_crawler.Models;
 
 namespace ITHS_LABB_2_dungeon_crawler
@@ -6,7 +8,7 @@ namespace ITHS_LABB_2_dungeon_crawler
     public class LevelData
     {
         private readonly List<LevelElement> elements = [];
-        public IEnumerable<LevelElement> Elements => elements;
+        public List<LevelElement> Elements => elements;
         public Position PlayerStartPosition { get; private set; }
 
         public void LoadLevel(string filename)
@@ -46,24 +48,48 @@ namespace ITHS_LABB_2_dungeon_crawler
             }
         }
 
-        public void TryMove(IMovable movable, Position newPosition)
+        public bool TryMove(IMovable movable, Position newPosition)
         {
             var elementAtNewPosition = Elements.SingleOrDefault(e => e.Position.X == newPosition.X && e.Position.Y == newPosition.Y);
             switch (elementAtNewPosition)
             {
                 case Wall:
-                    break;
+                    return false;
                 case Enemy:
-                    // Todo: Attack enemy.
-                    break;
+                    if (movable is Player)
+                    {
+                        HandleCombat((IFightable)movable, (IFightable)elementAtNewPosition);
+                        return true;
+                    }
+                    return false;
                 case Player:
-                    // Todo: Attack player
+                    if (movable is Enemy)
+                    {
+                        HandleCombat((IFightable)movable, (IFightable)elementAtNewPosition);
+                    }
                     break;
                 case null:
-                    Console.SetCursorPosition(movable.Position.X, movable.Position.Y);
+                    Console.SetCursorPosition(movable.Position.X, movable.Position.Y + LevelElement.levelYOffset);
                     Console.Write(" ");
                     movable.Position = newPosition;
-                    break;
+                    return true;
+            }
+
+            return false;
+        }
+
+        private void HandleCombat(IFightable attacker, IFightable defender)
+        {
+            Combat.Fight(attacker, defender);
+
+            if (defender is Enemy && defender.HP <= 0)
+            {
+                elements.Remove((LevelElement)defender);
+
+                if (attacker is Player player)
+                {
+                    player.IncreaseEnemiesSlain();
+                }
             }
         }
     }
