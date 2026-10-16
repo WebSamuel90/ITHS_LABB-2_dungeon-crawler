@@ -1,7 +1,7 @@
 ﻿using ITHS_LABB_2_dungeon_crawler.Interfaces;
 using ITHS_LABB_2_dungeon_crawler.Rendering;
 
-namespace ITHS_LABB_2_dungeon_crawler.Game
+namespace ITHS_LABB_2_dungeon_crawler.Core
 {
     public static class Combat
     {

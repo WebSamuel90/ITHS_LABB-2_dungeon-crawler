@@ -19,6 +19,11 @@
             return total + Modifier;
         }
 
+        public void IncreaseModifier(int value)
+        {
+            Modifier += value;
+        }
+
         public override string ToString()
         {
             string op = Modifier > 0 ? "+" : "";

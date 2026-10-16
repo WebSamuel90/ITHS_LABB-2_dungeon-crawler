@@ -1,7 +1,11 @@
-﻿using ITHS_LABB_2_dungeon_crawler.Entities;
-using ITHS_LABB_2_dungeon_crawler.Game;
+﻿using ITHS_LABB_2_dungeon_crawler.Core;
+using ITHS_LABB_2_dungeon_crawler.Entities;
+using ITHS_LABB_2_dungeon_crawler.Entities.Enemies;
+using ITHS_LABB_2_dungeon_crawler.Entities.Loot;
 using ITHS_LABB_2_dungeon_crawler.Interfaces;
 using ITHS_LABB_2_dungeon_crawler.Models;
+using ITHS_LABB_2_dungeon_crawler.Rendering;
+using LootItem = ITHS_LABB_2_dungeon_crawler.Entities.Loot.Loot;
 
 namespace ITHS_LABB_2_dungeon_crawler
 {
@@ -50,7 +54,8 @@ namespace ITHS_LABB_2_dungeon_crawler
 
         public bool TryMove(IMovable movable, Position newPosition)
         {
-            var elementAtNewPosition = Elements.SingleOrDefault(e => e.Position.X == newPosition.X && e.Position.Y == newPosition.Y);
+            //var elementAtNewPosition = Elements.SingleOrDefault(e => e.Position.X == newPosition.X && e.Position.Y == newPosition.Y);
+            var elementAtNewPosition = ElementAtPosition(newPosition);
             switch (elementAtNewPosition)
             {
                 case Wall:
@@ -68,6 +73,18 @@ namespace ITHS_LABB_2_dungeon_crawler
                         HandleCombat((IFightable)movable, (IFightable)elementAtNewPosition);
                     }
                     break;
+                case LootItem loot:
+                    if (movable is Player player)
+                    {
+                        loot.Apply(player);
+                        elements.Remove(loot);
+                        player.Position = newPosition;
+                        return true;
+                    }
+                    return false;
+                case Boss:
+                    HandleCombat((IFightable)movable, (IFightable)elementAtNewPosition);
+                    return true;
                 case null:
                     Console.SetCursorPosition(movable.Position.X, movable.Position.Y + LevelElement.levelYOffset);
                     Console.Write(" ");
@@ -78,18 +95,59 @@ namespace ITHS_LABB_2_dungeon_crawler
             return false;
         }
 
+        private LevelElement ElementAtPosition(Position position)
+        {
+            var elementAtPosition = Elements.SingleOrDefault(e => e.Position.X == position.X && e.Position.Y == position.Y);
+            return elementAtPosition;
+        }
+
         private void HandleCombat(IFightable attacker, IFightable defender)
         {
             Combat.Fight(attacker, defender);
+            HandleEnemyDeath(attacker);
+            HandleEnemyDeath(defender);
+        }
 
-            if (defender is Enemy && defender.HP <= 0)
+        private void HandleEnemyDeath(IFightable fighter)
+        {
+            if (fighter is Enemy enemy && enemy.HP <= 0)
             {
-                elements.Remove((LevelElement)defender);
+                elements.Remove(enemy);
+                DropLoot(enemy.Position);
 
-                if (attacker is Player player)
+                var elementAtPosition = ElementAtPosition(enemy.Position);
+                if (elementAtPosition is Loot)
                 {
-                    player.IncreaseEnemiesSlain();
+                    GameRenderer.LootLog(enemy, (Loot)elementAtPosition);
                 }
+
+                Player player = Elements.OfType<Player>().Single();
+                player.IncreaseEnemiesSlain();
+            }
+
+            if (fighter is Boss boss && boss.HP <= 0)
+            {
+                elements.Remove(boss);
+            }
+        }
+
+        private void DropLoot(Position position)
+        {
+            int loot = Random.Shared.Next(4);
+
+            switch (loot)
+            {
+                case 0:
+                    break;
+                case 1:
+                    elements.Add(new HealthPotion(position));
+                    break;
+                case 2:
+                    elements.Add(new AttackBuff(position));
+                    break;
+                case 3:
+                    elements.Add(new DefenceBuff(position));
+                    break;
             }
         }
     }

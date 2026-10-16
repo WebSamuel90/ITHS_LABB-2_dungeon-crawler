@@ -3,10 +3,11 @@ using ITHS_LABB_2_dungeon_crawler.Models;
 
 namespace ITHS_LABB_2_dungeon_crawler.Entities
 {
-    public class Player(Position Position) : LevelElement(Position, '@', ConsoleColor.Blue), IMovable, IFightable
+    public class Player(Position Position) : LevelElement(Position, '@', ConsoleColor.DarkMagenta), IMovable, IFightable
     {
         public string Name { get; } = "Player";
-        public int HP { get; set; } = 100;
+        private int hp = 100;
+        public int HP { get => hp; set => hp = Math.Clamp(value, 0, hp); }
         public Dice AttackDice { get; } = new Dice(2, 6, 2);
         public Dice DefenceDice { get; } = new Dice(2, 6, 0);
         public int EnemiesSlain { get; private set; } = 0;
@@ -16,12 +17,11 @@ namespace ITHS_LABB_2_dungeon_crawler.Entities
             EnemiesSlain++;
         }
 
-        public Position? TakeInput()
+        public Position? TakeInput(ConsoleKey key)
         {
-            ConsoleKeyInfo KeyInfo = Console.ReadKey(true);
             Position newPosition = new(Position.X, Position.Y);
 
-            switch (KeyInfo.Key)
+            switch (key)
             {
                 case ConsoleKey.UpArrow:
                     newPosition.Y--;
@@ -35,6 +35,8 @@ namespace ITHS_LABB_2_dungeon_crawler.Entities
                 case ConsoleKey.RightArrow:
                     newPosition.X++;
                     break;
+                case ConsoleKey.Spacebar:
+                    return newPosition;
                 default:
                     return null;
             }

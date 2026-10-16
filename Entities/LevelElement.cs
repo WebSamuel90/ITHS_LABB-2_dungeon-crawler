@@ -8,7 +8,7 @@ namespace ITHS_LABB_2_dungeon_crawler.Entities
         public ConsoleColor Color { get; protected set; } = color;
         public Position Position { get; set; } = position;
 
-        public const int levelYOffset = 8;
+        public const int levelYOffset = 9;
 
         public void Draw()
         {
