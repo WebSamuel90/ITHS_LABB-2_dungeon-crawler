@@ -1,6 +1,6 @@
 ﻿using ITHS_LABB_2_dungeon_crawler.Models;
 
-namespace ITHS_LABB_2_dungeon_crawler.Entities
+namespace ITHS_LABB_2_dungeon_crawler.Entities.Enemies
 {
     public class Snake(Position Position) : Enemy(Position, 's', ConsoleColor.DarkRed, "Snake", 25, new Dice(3, 4, 2), new Dice(1, 8, 5))
     {

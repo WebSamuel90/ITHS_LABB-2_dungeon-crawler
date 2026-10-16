@@ -8,5 +8,6 @@ namespace ITHS_LABB_2_dungeon_crawler.Interfaces
         public int HP { get; set; }
         public Dice AttackDice { get; }
         public Dice DefenceDice { get; }
+        public Position Position { get; }
     }
 }

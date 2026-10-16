@@ -1,6 +1,6 @@
 ﻿using ITHS_LABB_2_dungeon_crawler.Models;
 
-namespace ITHS_LABB_2_dungeon_crawler.Entities
+namespace ITHS_LABB_2_dungeon_crawler.Entities.Enemies
 {
     public class Rat(Position Position) : Enemy(Position, 'r', ConsoleColor.DarkYellow, "Rat", 10, new Dice(1, 6, 3), new Dice(1, 6, 1))
     {

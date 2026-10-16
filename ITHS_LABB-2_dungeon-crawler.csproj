@@ -10,10 +10,14 @@
 
   <ItemGroup>
     <None Remove="Assets\Level1.txt" />
+    <None Remove="Assets\Level2.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Assets\Level1.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Level2.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
